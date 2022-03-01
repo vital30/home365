@@ -1,0 +1,98 @@
+
+
+<div>
+    <mat-form-field *ngFor="let filter of filterSelectObj" style="margin-left: 15px;">
+      <mat-label>Filter {{filter.name}}</mat-label>
+      <select matNativeControl name="{{filter.columnProp}}" 
+        (change)="filterChange(filter,$event)">
+        <option value="">-- Select {{filter.name}} --</option>
+        <option [value]="item" *ngFor="let item of filter.options">{{item}}</option>
+      </select>
+    </mat-form-field>
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="resetFilters()">Reset</button>
+  </div>
+
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+  
+      <ng-container matColumnDef="createdOn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> CreatedOn </th>
+        <td mat-cell *matCellDef="let row"> {{row.createdOn}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Property </th>
+        <td mat-cell *matCellDef="let row" ><a (click)="OpenPropertyDialog(row)">{{row.address}}</a> </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="occupiedStats">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Property Status </th>
+        <td mat-cell *matCellDef="let row" [ngClass]="{ 'green': row.occupiedStats == 'occupied', 'red': row.occupiedStats == 'vacant' , 'grey': row.occupiedStats == 'inactive'}">
+             {{row.occupiedStats}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="plan">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan </th>
+        <td mat-cell *matCellDef="let row"> {{row.plan}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="owner">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner </th>
+        <td mat-cell *matCellDef="let row"><a (click)="OpenOwnerDialog(row)">{{row.owner}}</a>  </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ownerStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner Status </th>
+        <td mat-cell *matCellDef="let row" [ngClass]="{ 'green': row.ownerStatus == 'active', 'grey': row.ownerStatus == 'inactive'}"> 
+            {{row.ownerStatus}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tenant">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant </th>
+        <td mat-cell *matCellDef="let row"><a (click)="OpenTenantDialog(row)">{{row.tenant?.firstName || ""}} {{row.tenant?.lastName || ""}}</a> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tenantStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Status </th>
+        <td mat-cell *matCellDef="let row" [ngClass]="{ 'green': row.tenant?.tenantStatus == 'active', 'red': row.tenant?.tenantStatus == 'vacant' , 'grey': row.tenant?.tenantStatus == 'inactive'}"> 
+            {{row.tenant?.tenantStatus || ""}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div *ngIf="isLoading" 
+        style="display: flex; justify-content: center; align-items: center; color: black;">
+        <mat-progress-spinner 
+            color="primary" 
+            mode="indeterminate">
+        </mat-progress-spinner>
+        </div>
+
+        <mat-paginator #paginator [length]="length" [pageIndex]="currentPage" [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="pageChanged($event)" aria-label="Select page">
+    </mat-paginator>
+  </div>
+
+<ng-template #dialogRef let-selectedRow>
+
+    <mat-dialog-content class="mat-typography" *ngIf="selectedProperty" >
+        <label>Property Name:</label><h3> {{selectedRow.address}}</h3>
+        <label>Property Status:</label><h3> {{selectedRow.occupiedStats}}</h3>
+    </mat-dialog-content>
+    <mat-dialog-content class="mat-typography" *ngIf="selectedOwner" >
+        <label>Owner Name:</label><h3> {{selectedRow.owner}}</h3>
+        <label>Owner Status:</label><h3> {{selectedRow.ownerStatus}}</h3>
+    </mat-dialog-content>
+    <mat-dialog-content class="mat-typography" *ngIf="selectedTenant" >
+        <label>Tenant Name:</label><h3> {{selectedRow.tenant.firstName}} {{selectedRow.tenant.lastName}}</h3>
+        <label>Tenant Status:</label><h3> {{selectedRow.tenant.tenantStatus}}</h3>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>OK</button>
+    </mat-dialog-actions>
+</ng-template>

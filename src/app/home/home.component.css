@@ -1,0 +1,59 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    width: 10%;
+  }
+
+.green{
+      color: #08BE22 !important;
+      font-weight: bold;
+  }
+
+.red{
+    color: #D52B1E !important;
+    font-weight: bold;
+}
+
+.grey{
+    color: #353435 !important;
+    font-weight: bold;
+}
+
+td.mat-cell{
+    border-bottom-style: none;
+}
+
+th.mat-header-cell{
+    border-bottom-style: none;
+}
+
+::ng-deep .cdk-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 26%;
+    background: #fff;
+    width: 803px;
+    border: 1px solid;
+    height: auto;
+}
+
+.mat-column-address {
+    width: 30% !important;
+    padding-left: 1%;
+    cursor: pointer;
+  }
+
+  a{
+      color: #0095ff;
+  }
+
+ .mat-form-field {
+    width: 250px;
+}
